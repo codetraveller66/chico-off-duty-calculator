@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10131b">
+  <title>下班几点？· Off Duty</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="scene__blur"></div>
+    <div class="scene__focus"></div>
+    <div class="scene__shade"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Off Duty">
+      <span class="brand__mark">⌁</span>
+      <span data-i18n="brand">下班几点？</span>
+    </a>
+    <div class="topbar__actions">
+      <div class="languages" aria-label="Language">
+        <button type="button" data-lang="zh" class="is-active">中</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="de">DE</button>
+      </div>
+      <button class="theme-button" id="themeButton" type="button">
+        <span aria-hidden="true">◐</span>
+        <span data-i18n="changeBackground">换背景</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro" aria-labelledby="pageTitle">
+      <p class="eyebrow" data-i18n="eyebrow">OFF DUTY · 下班倒计时</p>
+      <h1 id="pageTitle" data-i18n="title">今天，几点下班？</h1>
+      <p class="intro__copy" data-i18n="subtitle">填好三个时间，让小腊肠狗陪你跑向下班。</p>
+
+      <div class="progress-card">
+        <div class="progress-card__meta">
+          <span data-i18n="workProgress">今日上班进度</span>
+          <strong id="progressPercent">0%</strong>
+        </div>
+        <div class="track" id="progressTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="track__fill" id="progressFill"></div>
+          <div class="dog" id="progressDog" aria-hidden="true">
+            <div class="dog__sprite"></div>
+          </div>
+        </div>
+        <div class="progress-card__times">
+          <span id="progressStart">09:00</span>
+          <span id="progressStatus" data-i18n="notStarted">还没开工，先喝口水</span>
+          <span id="progressEnd">18:00</span>
+        </div>
+      </div>
+
+      <div class="chico-zone">
+        <div class="chico-zone__copy">
+          <div class="chico-zone__identity">
+            <span class="chico-zone__status"></span>
+            <strong>Chico</strong>
+            <small data-i18n="juliaCompanion">Julia 的摸鱼搭子</small>
+          </div>
+          <div class="speech-bubble" id="chicoBubble" aria-live="polite">Julia 今天也要加油哦！</div>
+          <p data-i18n="tapChico">点击 Chico，看看他下一秒想做什么。</p>
+        </div>
+        <button class="chico-character" id="chicoCharacter" type="button" aria-label="Change Chico pose">
+          <span class="chico-character__sprite" id="chicoSprite"></span>
+          <i aria-hidden="true"></i>
+        </button>
+      </div>
+    </section>
+
+    <section class="calculator" aria-label="Workday calculator">
+      <div class="calculator__heading">
+        <div>
+          <p class="section-kicker" data-i18n="calculator">时间计算器</p>
+          <h2 data-i18n="setSchedule">设置今天的安排</h2>
+        </div>
+        <div class="live-dot"><i></i><span data-i18n="live">实时</span></div>
+      </div>
+
+      <form id="calculatorForm" novalidate>
+        <div class="field-group">
+          <div class="field-label-row">
+            <label for="startTime" data-i18n="startTime">上班时间</label>
+            <label class="pin"><input type="checkbox" data-pin="startTime"><span></span><em data-i18n="fixed">固定</em></label>
+          </div>
+          <div class="input-shell input-shell--time">
+            <input id="startTime" type="time" value="09:00" step="60" required>
+            <span class="input-unit" data-i18n="clock">时钟</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <label for="workHours" data-i18n="workHours">工作时长</label>
+            <label class="pin"><input type="checkbox" data-pin="workHours"><span></span><em data-i18n="fixed">固定</em></label>
+          </div>
+          <div class="combo" data-combo="workHours">
+            <div class="input-shell">
+              <input id="workHours" inputmode="decimal" type="number" min="4" max="12" step="0.5" value="8" required aria-autocomplete="list" aria-expanded="false">
+              <span class="input-unit">h</span>
+              <button class="combo__toggle" type="button" aria-label="Options">⌄</button>
+            </div>
+            <div class="combo__menu" role="listbox"></div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <label for="breakHours" data-i18n="breakHours">休息时长</label>
+            <label class="pin"><input type="checkbox" data-pin="breakHours"><span></span><em data-i18n="fixed">固定</em></label>
+          </div>
+          <div class="combo" data-combo="breakHours">
+            <div class="input-shell">
+              <input id="breakHours" inputmode="decimal" type="number" min="0" max="2" step="0.5" value="1" required aria-autocomplete="list" aria-expanded="false">
+              <span class="input-unit">h</span>
+              <button class="combo__toggle" type="button" aria-label="Options">⌄</button>
+            </div>
+            <div class="combo__menu" role="listbox"></div>
+          </div>
+        </div>
+
+        <p class="error-message" id="errorMessage" role="alert"></p>
+        <button class="calculate-button" type="submit">
+          <span data-i18n="calculate">计算下班时间</span><b>→</b>
+        </button>
+      </form>
+
+      <div class="result" id="result" aria-live="polite">
+        <div>
+          <span data-i18n="estimated">预计下班时间</span>
+          <strong id="resultTime">18:00</strong>
+        </div>
+        <p id="resultMessage" data-i18n="resultMessage">今天也辛苦了，准点收工。</p>
+      </div>
+    </section>
+  </main>
+
+  <button class="theme-fab" id="themeFab" type="button" aria-label="Change background">◐</button>
+
+  <div class="drawer" id="themeDrawer" aria-hidden="true">
+    <button class="drawer__backdrop" type="button" data-close-drawer aria-label="Close"></button>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer__head">
+        <div><p class="section-kicker" data-i18n="backgrounds">背景主题</p><h2 id="drawerTitle" data-i18n="chooseScene">挑一个今天的风景</h2></div>
+        <button class="drawer__close" type="button" data-close-drawer>×</button>
+      </div>
+      <p class="drawer__note" data-i18n="originalNote">影视主题使用公开宣传图，BTS 图片采用 CC 授权，古建筑为原创背景。</p>
+      <div class="theme-grid" id="themeGrid"></div>
+    </aside>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
